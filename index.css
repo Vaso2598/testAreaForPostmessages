@@ -1,0 +1,36 @@
+* {
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+	background-color: #ff9b54;
+}
+
+.gameFrame {
+	width: 800px;
+	height: 600px;
+	border-radius: 16px;
+}
+
+.btnContainer {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	height: 100%;
+	margin: 8px;
+}
+
+.btn {
+	width: clamp(32px, 64px, 128px);
+	height: 64px;
+	border: 1px solid #4f000b;
+	border-radius: 16px;
+	background-color: #720026;
+	font-size: 16px;
+	font-weight: 600;
+	color: #ff7f51;
+}
+
+.btn:hover {
+	background-color: #4f000b;
+}
