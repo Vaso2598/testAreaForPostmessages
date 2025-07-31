@@ -23,8 +23,19 @@ const soundButton = document.getElementById("soundBtn");
 
 const autoPlayContainer = document.getElementById("autoPlay");
 
+let isEnabled = true;
+let autoSpinCount = [];
+
 startButton.addEventListener("click", () => {
 	console.log("Blank for now");
+});
+
+window.addEventListener("message", ($e) => {
+	if ($e.origin !== "http://localhost:7295") return;
+
+	if ($e.data.type === "Spin") {
+		console.log("FreeSpins:", $e.data.data);
+	}
 });
 
 spinButton.addEventListener("click", () => {
@@ -32,27 +43,21 @@ spinButton.addEventListener("click", () => {
 	iframe.contentWindow.postMessage({type: "Spin", data: "Bet"}, "http://localhost:7295");
 });
 
-let autoSpinCount = [];
-
 window.addEventListener("message", ($e) => {
 	if ($e.origin !== "http://localhost:7295") return;
 
 	if ($e.data.type === "AutoSpin") {
 		autoSpinCount = $e.data.data;
-		console.log("Child sent AutoSpin:", autoSpinCount);
+		// console.log("Child sent AutoSpin:", autoSpinCount);
 
-		// Clear existing content
 		autoPlayContainer.innerHTML = "";
 
-		// Create a button for each autoSpinCount value
-		console.log(autoSpinCount.typeof);
 		autoSpinCount.forEach((count) => {
 			const button = document.createElement("button");
 			button.textContent = count;
-			button.classList.add("btn"); // Add any styling class you want
+			button.classList.add("btn");
 			button.addEventListener("click", () => {
 				console.log(`Auto Spin selected: ${count}`);
-				// You can postMessage again or trigger a handler here
 				iframe.contentWindow.postMessage({type: "AutoSpinSelected", data: count}, "http://localhost:7295");
 			});
 			autoPlayContainer.appendChild(button);
@@ -64,7 +69,7 @@ autoPlayButton.addEventListener("click", () => {
 	// console.log("🔼 Auto Play window open Message Sent to Game");
 	// console.log("waiting for autoplay values");
 	iframe.contentWindow.postMessage({type: "AutoSpin", data: {autoSpinCount}}, "http://localhost:7295");
-	console.log(autoSpinCount);
+	// console.log(autoSpinCount);
 });
 
 betsButton.addEventListener("click", () => {
@@ -74,5 +79,11 @@ betsButton.addEventListener("click", () => {
 
 soundButton.addEventListener("click", () => {
 	// console.log("🔼 Sound mute/unmute Message Sent to Game");
-	iframe.contentWindow.postMessage({type: "Sound", data: {isEnabled: true}}, "http://localhost:7295");
+	if (isEnabled) {
+		iframe.contentWindow.postMessage({type: "Sound", data: {isEnabled}}, "http://localhost:7295");
+		isEnabled = false;
+	} else {
+		iframe.contentWindow.postMessage({type: "Sound", data: {isEnabled}}, "http://localhost:7295");
+		isEnabled = true;
+	}
 });
