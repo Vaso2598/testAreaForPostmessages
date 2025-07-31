@@ -14,10 +14,18 @@ body {
 
 .btnContainer {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	gap: 16px;
 	height: 100%;
 	margin: 8px;
+}
+
+.innerBtnContainer {
+	gap: 8px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 4px;
 }
 
 .btn {
@@ -29,6 +37,16 @@ body {
 	font-size: 16px;
 	font-weight: 600;
 	color: #ff7f51;
+	cursor: pointer;
+}
+
+.smallBtn {
+	width: 24px;
+	height: 24px;
+	border-radius: 8px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .btn:hover {

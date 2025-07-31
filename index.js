@@ -4,8 +4,20 @@ lambdaGame.innerHTML = `
 <div class="btnContainer">
     <button id="startBtn" class="btn">Start Game</button>
     <button id="spinBtn" class="btn" type="button">Spin</button>
-    <button id="autoPlayBtn" class="btn">Auto Play</button>
-    <button id="betsBtn" class="btn">Bets</button>
+	<div>
+    	<button id="autoPlayBtn" class="btn">Auto Play</button>
+		<div class="innerBtnContainer">
+			<button class="btn smallBtn">+</button>
+			<button class="btn smallBtn">-</button>
+		</div>
+	</div>
+	<div>
+    	<button id="betsBtn" class="btn">Bets</button>
+		<div class="innerBtnContainer">
+			<button class="btn smallBtn">+</button>
+			<button class="btn smallBtn">-</button>
+		</div>
+	</div>
     <button id="soundBtn" class="btn">Sound</button>
 </div>
 <div id="autoPlay" class="btnContainer"></div>
