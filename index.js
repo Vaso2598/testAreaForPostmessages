@@ -18,12 +18,15 @@ lambdaGame.innerHTML = `
 			<button class="btn smallBtn">-</button>
 		</div>
 	</div>
-    <button id="soundBtn" class="btn">Sound</button>
+    <button id="musicBtn" class="btn">Music</button>
+    <button id="sfxBtn" class="btn">SFX</button>
 </div>
 <div id="autoPlay" class="btnContainer"></div>
 `;
 
-let isEnabled = true;
+// let isEnabled = true;
+let isMusicMuted = false;
+let isSFXMuted = false;
 let autoSpinCount = [];
 let autoSpinCountIndex = -1;
 let betValues = [];
@@ -37,7 +40,9 @@ const startButton = document.getElementById("startBtn");
 const spinButton = document.getElementById("spinBtn");
 const autoPlayButton = document.getElementById("autoPlayBtn");
 const betsButton = document.getElementById("betsBtn");
-const soundButton = document.getElementById("soundBtn");
+// const soundButton = document.getElementById("soundBtn");
+const musicButton = document.getElementById("musicBtn");
+const sfxButton = document.getElementById("sfxBtn");
 
 const autoPlayInnerBtns = document.querySelectorAll("#autoPlayContainer .innerBtnContainer .smallBtn");
 const autoPlayPlusBtn = autoPlayInnerBtns[0];
@@ -135,7 +140,7 @@ betsMinusBtn.addEventListener("click", () => {
 
 /* = Sound = */
 
-soundButton.addEventListener("click", () => {
+/* soundButton.addEventListener("click", () => {
 	// console.log("🔼 Sound mute/unmute Message Sent to Game");
 	if (isEnabled) {
 		iframe.contentWindow.postMessage({type: "Sound", data: {isEnabled}}, "http://localhost:7295");
@@ -144,4 +149,14 @@ soundButton.addEventListener("click", () => {
 		iframe.contentWindow.postMessage({type: "Sound", data: {isEnabled}}, "http://localhost:7295");
 		isEnabled = true;
 	}
+}); */
+
+musicButton.addEventListener("click", () => {
+	isMusicMuted = !isMusicMuted;
+	iframe.contentWindow.postMessage({type: "Music", data: {isMusicMuted}}, "http://localhost:7295");
+});
+
+sfxButton.addEventListener("click", () => {
+	isSFXMuted = !isSFXMuted;
+	iframe.contentWindow.postMessage({type: "SFX", data: {isSFXMuted}}, "http://localhost:7295");
 });
