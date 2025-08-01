@@ -72,7 +72,7 @@ window.addEventListener("message", ($e) => {
 
 spinButton.addEventListener("click", () => {
 	// console.log("🔼 Spin Message Sent to Game");
-	iframe.contentWindow.postMessage({type: "Spin", data: "Bet"}, "http://localhost:7295");
+	iframe.contentWindow.postMessage({type: "Spin", data: bet}, "http://localhost:7295");
 	if (autoSpinCount > 0) {
 		iframe.contentWindow.postMessage({type: "AutoSpinCount", data: autoSpinCount}, "http://localhost:7295");
 		console.log("sent spin count");
