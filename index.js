@@ -27,10 +27,12 @@ lambdaGame.innerHTML = `
 // let isEnabled = true;
 let isMusicMuted = false;
 let isSFXMuted = false;
-let autoSpinCount = [];
-let autoSpinCountIndex = -1;
+let autoSpinValues = [];
+let autoSpinValuesIndex = 0;
 let betValues = [];
 let betValuesIndex = 0;
+let autoSpinCount = 0;
+let bet = 0;
 
 const iframe = document.getElementById("gameFrame");
 
@@ -71,6 +73,10 @@ window.addEventListener("message", ($e) => {
 spinButton.addEventListener("click", () => {
 	// console.log("🔼 Spin Message Sent to Game");
 	iframe.contentWindow.postMessage({type: "Spin", data: "Bet"}, "http://localhost:7295");
+	if (autoSpinCount > 0) {
+		iframe.contentWindow.postMessage({type: "AutoSpinCount", data: autoSpinCount}, "http://localhost:7295");
+		console.log("sent spin count");
+	}
 });
 
 /* = AutoPlay = */
@@ -78,32 +84,36 @@ spinButton.addEventListener("click", () => {
 window.addEventListener("message", ($e) => {
 	if ($e.origin !== "http://localhost:7295") return;
 
-	if ($e.data.type === "AutoSpin") {
-		autoSpinCount = $e.data.data;
-		// console.log("Child sent AutoSpin:", autoSpinCount);
-		autoSpinCount.unshift(0);
+	if ($e.data.type === "AutoSpinValues") {
+		autoSpinValues = $e.data.data;
+		// console.log("Child sent autoSpinCount:", autoSpinValues);
+		autoSpinValues.unshift(0);
+		autoSpinCount = autoSpinValues[autoSpinValuesIndex];
+		autoPlayButton.innerText = autoSpinCount;
 	}
 });
 
-autoPlayButton.addEventListener("click", () => {
+/* autoPlayButton.addEventListener("click", () => {
 	// console.log("🔼 Auto Play window open Message Sent to Game");
 	// console.log("waiting for autoplay values");
-	iframe.contentWindow.postMessage({type: "AutoSpin", data: {autoSpinCount}}, "http://localhost:7295");
-});
+	iframe.contentWindow.postMessage({type: "AutoSpinValues", data: {autoSpinValues}}, "http://localhost:7295");
+}); */
 
 autoPlayPlusBtn.addEventListener("click", () => {
-	if (autoSpinCountIndex < autoSpinCount.length - 1) {
-		autoSpinCountIndex++;
-		const selectedCount = autoSpinCount[autoSpinCountIndex];
-		console.log("Selected AutoSpin value:", selectedCount);
+	if (autoSpinValuesIndex < autoSpinValues.length - 1) {
+		autoSpinValuesIndex++;
+		autoSpinCount = autoSpinValues[autoSpinValuesIndex];
+		console.log("Selected autoSpinCount value:", autoSpinCount);
+		autoPlayButton.innerText = autoSpinCount;
 	}
 });
 
 autoPlayMinusBtn.addEventListener("click", () => {
-	if (autoSpinCountIndex > 1) {
-		autoSpinCountIndex--;
-		const selectedCount = autoSpinCount[autoSpinCountIndex];
-		console.log("Selected AutoSpin value:", selectedCount);
+	if (autoSpinValuesIndex > 0) {
+		autoSpinValuesIndex--;
+		autoSpinCount = autoSpinValues[autoSpinValuesIndex];
+		console.log("Selected autoSpinCount value:", autoSpinCount);
+		autoPlayButton.innerText = autoSpinCount;
 	}
 });
 
@@ -113,28 +123,32 @@ window.addEventListener("message", ($e) => {
 	if ($e.data.type === "BetValues") {
 		betValues = $e.data.data;
 		console.log("Child sent BetValues:", betValues);
+		bet = betValues[betValuesIndex];
+		betsButton.innerText = bet;
 	}
 });
 
-betsButton.addEventListener("click", () => {
+/* betsButton.addEventListener("click", () => {
 	// console.log("🔼 Bets window open Message Sent to Game");
 	// console.log("waiting for bet values");
 	iframe.contentWindow.postMessage({type: "BetValues", data: {betValues}}, "http://localhost:7295");
-});
+}); */
 
 betsPlusBtn.addEventListener("click", () => {
 	if (betValuesIndex < betValues.length - 1) {
 		betValuesIndex++;
-		const selectedCount = betValues[betValuesIndex];
-		console.log("Selected bet value:", selectedCount);
+		bet = betValues[betValuesIndex];
+		console.log("Selected bet value:", bet);
+		betsButton.innerText = bet;
 	}
 });
 
 betsMinusBtn.addEventListener("click", () => {
 	if (betValuesIndex > 0) {
 		betValuesIndex--;
-		const selectedCount = betValues[betValuesIndex];
-		console.log("Selected bet value:", selectedCount);
+		bet = betValues[betValuesIndex];
+		console.log("Selected bet value:", bet);
+		betsButton.innerText = bet;
 	}
 });
 
