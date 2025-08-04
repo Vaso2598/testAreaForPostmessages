@@ -56,22 +56,54 @@ const betsMinusBtn = betsInnerBtns[1];
 
 /* = PostMessages = */
 
+window.addEventListener("message", ($e) => {
+	if ($e.origin !== "http://localhost:7295") return;
+
+	const {type, data} = $e.data;
+
+	switch (type) {
+		case "UpdateBalance":
+			console.log("Balance", data);
+			break;
+
+		case "UpdateWin":
+			console.log("Win", data);
+			break;
+
+		case "Spin":
+			console.log("FreeSpins:", data);
+			break;
+
+		case "AutoSpinValues":
+			autoSpinValues = data;
+			autoSpinValues.unshift(0);
+			autoSpinCount = autoSpinValues[autoSpinValuesIndex];
+			autoPlayButton.innerText = autoSpinCount;
+			break;
+
+		case "BetValues":
+			betValues = data;
+			bet = betValues[betValuesIndex];
+			betsButton.innerText = bet;
+			iframe.contentWindow.postMessage({type: "BetValue", data: bet}, "http://localhost:7295");
+			break;
+
+		default:
+			// Optional: log unhandled message types for debugging
+			console.log("Unhandled message type:", type, data);
+			break;
+	}
+});
+
+/* = Button Event Listeners = */
+
 startButton.addEventListener("click", () => {
 	console.log("Blank for now");
 });
 
 /* = Spin = */
 
-window.addEventListener("message", ($e) => {
-	if ($e.origin !== "http://localhost:7295") return;
-
-	if ($e.data.type === "Spin") {
-		console.log("FreeSpins:", $e.data.data);
-	}
-});
-
 spinButton.addEventListener("click", () => {
-	// console.log("🔼 Spin Message Sent to Game");
 	iframe.contentWindow.postMessage({type: "Spin", data: bet}, "http://localhost:7295");
 	if (autoSpinCount > 0) {
 		iframe.contentWindow.postMessage({type: "AutoSpinCount", data: autoSpinCount}, "http://localhost:7295");
@@ -80,24 +112,6 @@ spinButton.addEventListener("click", () => {
 });
 
 /* = AutoPlay = */
-
-window.addEventListener("message", ($e) => {
-	if ($e.origin !== "http://localhost:7295") return;
-
-	if ($e.data.type === "AutoSpinValues") {
-		autoSpinValues = $e.data.data;
-		// console.log("Child sent autoSpinCount:", autoSpinValues);
-		autoSpinValues.unshift(0);
-		autoSpinCount = autoSpinValues[autoSpinValuesIndex];
-		autoPlayButton.innerText = autoSpinCount;
-	}
-});
-
-/* autoPlayButton.addEventListener("click", () => {
-	// console.log("🔼 Auto Play window open Message Sent to Game");
-	// console.log("waiting for autoplay values");
-	iframe.contentWindow.postMessage({type: "AutoSpinValues", data: {autoSpinValues}}, "http://localhost:7295");
-}); */
 
 autoPlayPlusBtn.addEventListener("click", () => {
 	if (autoSpinValuesIndex < autoSpinValues.length - 1) {
@@ -119,27 +133,13 @@ autoPlayMinusBtn.addEventListener("click", () => {
 
 /* = Bets = */
 
-window.addEventListener("message", ($e) => {
-	if ($e.data.type === "BetValues") {
-		betValues = $e.data.data;
-		console.log("Child sent BetValues:", betValues);
-		bet = betValues[betValuesIndex];
-		betsButton.innerText = bet;
-	}
-});
-
-/* betsButton.addEventListener("click", () => {
-	// console.log("🔼 Bets window open Message Sent to Game");
-	// console.log("waiting for bet values");
-	iframe.contentWindow.postMessage({type: "BetValues", data: {betValues}}, "http://localhost:7295");
-}); */
-
 betsPlusBtn.addEventListener("click", () => {
 	if (betValuesIndex < betValues.length - 1) {
 		betValuesIndex++;
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
+		iframe.contentWindow.postMessage({type: "BetValue", data: bet}, "http://localhost:7295");
 	}
 });
 
@@ -149,21 +149,11 @@ betsMinusBtn.addEventListener("click", () => {
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
+		iframe.contentWindow.postMessage({type: "BetValue", data: bet}, "http://localhost:7295");
 	}
 });
 
 /* = Sound = */
-
-/* soundButton.addEventListener("click", () => {
-	// console.log("🔼 Sound mute/unmute Message Sent to Game");
-	if (isEnabled) {
-		iframe.contentWindow.postMessage({type: "Sound", data: {isEnabled}}, "http://localhost:7295");
-		isEnabled = false;
-	} else {
-		iframe.contentWindow.postMessage({type: "Sound", data: {isEnabled}}, "http://localhost:7295");
-		isEnabled = true;
-	}
-}); */
 
 musicButton.addEventListener("click", () => {
 	isMusicMuted = !isMusicMuted;
