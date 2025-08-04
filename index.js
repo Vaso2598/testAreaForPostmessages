@@ -63,11 +63,11 @@ window.addEventListener("message", ($e) => {
 
 	switch (type) {
 		case "UpdateBalance":
-			console.log("Balance", data);
+			console.log("New Balance", data);
 			break;
 
 		case "UpdateWin":
-			console.log("Win", data);
+			console.log("Total Win", data);
 			break;
 
 		case "Spin":
@@ -85,7 +85,7 @@ window.addEventListener("message", ($e) => {
 			betValues = data;
 			bet = betValues[betValuesIndex];
 			betsButton.innerText = bet;
-			iframe.contentWindow.postMessage({type: "BetValue", data: bet}, "http://localhost:7295");
+			// iframe.contentWindow.postMessage({type: "BetValue", data: bet}, "http://localhost:7295");
 			break;
 
 		default:
@@ -107,7 +107,7 @@ spinButton.addEventListener("click", () => {
 	iframe.contentWindow.postMessage({type: "Spin", data: bet}, "http://localhost:7295");
 	if (autoSpinCount > 0) {
 		iframe.contentWindow.postMessage({type: "AutoSpinCount", data: autoSpinCount}, "http://localhost:7295");
-		console.log("sent spin count");
+		console.log("sent spin count", autoSpinCount);
 	}
 });
 
@@ -157,10 +157,10 @@ betsMinusBtn.addEventListener("click", () => {
 
 musicButton.addEventListener("click", () => {
 	isMusicMuted = !isMusicMuted;
-	iframe.contentWindow.postMessage({type: "Music", data: {isMusicMuted}}, "http://localhost:7295");
+	iframe.contentWindow.postMessage({type: "Music", data: isMusicMuted}, "http://localhost:7295");
 });
 
 sfxButton.addEventListener("click", () => {
 	isSFXMuted = !isSFXMuted;
-	iframe.contentWindow.postMessage({type: "SFX", data: {isSFXMuted}}, "http://localhost:7295");
+	iframe.contentWindow.postMessage({type: "SFX", data: isSFXMuted}, "http://localhost:7295");
 });
