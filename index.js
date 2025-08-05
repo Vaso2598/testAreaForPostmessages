@@ -1,4 +1,20 @@
 const lambdaGame = document.getElementById("gameArea");
+const iframe = document.getElementById("gameFrame");
+
+const targetOrigin = "http://localhost:7295";
+
+// let isEnabled = true;
+let isMusicMuted = false;
+let isSFXMuted = false;
+let autoSpinValues = [];
+let autoSpinValuesIndex = 0;
+let betValues = [];
+let betValuesIndex = 0;
+let autoSpinCount = 0;
+let bet = 0;
+let speed = 1;
+let speedValues = [1, 2, 3];
+let speedValuesIndex = 0;
 
 lambdaGame.innerHTML = `
 <div class="btnContainer">
@@ -20,21 +36,10 @@ lambdaGame.innerHTML = `
 	</div>
     <button id="musicBtn" class="btn">Music</button>
     <button id="sfxBtn" class="btn">SFX</button>
+    <button id="speedBtn" class="btn">Speed ${speed}</button>
 </div>
 <div id="autoPlay" class="btnContainer"></div>
 `;
-
-// let isEnabled = true;
-let isMusicMuted = false;
-let isSFXMuted = false;
-let autoSpinValues = [];
-let autoSpinValuesIndex = 0;
-let betValues = [];
-let betValuesIndex = 0;
-let autoSpinCount = 0;
-let bet = 0;
-
-const iframe = document.getElementById("gameFrame");
 
 /* = Buttons = */
 
@@ -54,10 +59,12 @@ const betsInnerBtns = document.querySelectorAll("#betsContainer .innerBtnContain
 const betsPlusBtn = betsInnerBtns[0];
 const betsMinusBtn = betsInnerBtns[1];
 
+const speedBtn = document.getElementById("speedBtn");
+
 /* = PostMessages = */
 
 window.addEventListener("message", ($e) => {
-	if ($e.origin !== "http://localhost:7295") return;
+	if ($e.origin !== targetOrigin) return;
 
 	const {type, data} = $e.data;
 
@@ -85,7 +92,7 @@ window.addEventListener("message", ($e) => {
 			betValues = data;
 			bet = betValues[betValuesIndex];
 			betsButton.innerText = bet;
-			// iframe.contentWindow.postMessage({type: "BetValue", data: bet}, "http://localhost:7295");
+			// iframe.contentWindow.postMessage({type: "BetValue", data: bet}, targetOrigin);
 			break;
 
 		default:
@@ -104,9 +111,9 @@ startButton.addEventListener("click", () => {
 /* = Spin = */
 
 spinButton.addEventListener("click", () => {
-	iframe.contentWindow.postMessage({type: "Spin", data: bet}, "http://localhost:7295");
+	iframe.contentWindow.postMessage({type: "Spin", data: bet}, targetOrigin);
 	if (autoSpinCount > 0) {
-		iframe.contentWindow.postMessage({type: "AutoSpinCount", data: autoSpinCount}, "http://localhost:7295");
+		iframe.contentWindow.postMessage({type: "AutoSpinCount", data: autoSpinCount}, targetOrigin);
 		console.log("sent spin count", autoSpinCount);
 	}
 });
@@ -139,7 +146,7 @@ betsPlusBtn.addEventListener("click", () => {
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
-		iframe.contentWindow.postMessage({type: "BetValue", data: bet}, "http://localhost:7295");
+		iframe.contentWindow.postMessage({type: "BetValue", data: bet}, targetOrigin);
 	}
 });
 
@@ -149,7 +156,7 @@ betsMinusBtn.addEventListener("click", () => {
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
-		iframe.contentWindow.postMessage({type: "BetValue", data: bet}, "http://localhost:7295");
+		iframe.contentWindow.postMessage({type: "BetValue", data: bet}, targetOrigin);
 	}
 });
 
@@ -157,10 +164,20 @@ betsMinusBtn.addEventListener("click", () => {
 
 musicButton.addEventListener("click", () => {
 	isMusicMuted = !isMusicMuted;
-	iframe.contentWindow.postMessage({type: "Music", data: isMusicMuted}, "http://localhost:7295");
+	iframe.contentWindow.postMessage({type: "Music", data: isMusicMuted}, targetOrigin);
 });
 
 sfxButton.addEventListener("click", () => {
 	isSFXMuted = !isSFXMuted;
-	iframe.contentWindow.postMessage({type: "SFX", data: isSFXMuted}, "http://localhost:7295");
+	iframe.contentWindow.postMessage({type: "SFX", data: isSFXMuted}, targetOrigin);
+});
+
+/* = Speed = */
+
+speedBtn.addEventListener("click", () => {
+	speedValuesIndex = (speedValuesIndex + 1) % speedValues.length;
+	speed = speedValues[speedValuesIndex];
+	console.log(speed);
+	speedBtn.innerText = `Speed ${speed}`;
+	iframe.contentWindow.postMessage({type: "Speed", data: speed}, targetOrigin);
 });
