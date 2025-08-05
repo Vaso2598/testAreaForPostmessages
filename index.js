@@ -36,7 +36,7 @@ lambdaGame.innerHTML = `
 	</div>
     <button id="musicBtn" class="btn">Music</button>
     <button id="sfxBtn" class="btn">SFX</button>
-    <button id="speedBtn" class="btn">Speed ${speed}</button>
+    <button id="speedBtn" class="btn">Speed</button>
 </div>
 <div id="autoPlay" class="btnContainer"></div>
 `;
@@ -109,8 +109,9 @@ window.addEventListener("message", ($e) => {
 			break;
 
 		case "Speed":
+			console.log(data);
 			speed = data;
-			console.log(speed);
+			speedBtn.innerText = `Speed ${speed}`;
 			break;
 
 		default:
