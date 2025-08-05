@@ -100,6 +100,19 @@ window.addEventListener("message", ($e) => {
 			betsButton.innerText = bet;
 			break;
 
+		case "Music":
+			isMusicMuted = data;
+			break;
+
+		case "SFX":
+			isSFXMuted = data;
+			break;
+
+		case "Speed":
+			speed = data;
+			console.log(speed);
+			break;
+
 		default:
 			// Optional: log unhandled message types for debugging
 			console.log("Unhandled message type:", type, data);
