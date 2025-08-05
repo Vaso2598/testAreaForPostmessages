@@ -8,12 +8,17 @@
 	</head>
 	<body>
 		<h1>This area if for testing Postmessages</h1>
-		<iframe
-			class="gameFrame"
-			id="gameFrame"
-			src="http://localhost:7295/?operatorCode=LA01&lang=en&gtId=47&token=3d59f443-3ad0-472a-b8a0-9045c36f06cc"
-			frameborder="0"></iframe>
+		<div>
+			<label for="iframeSrc">Set iframe URL:</label>
+			<input type="text" id="iframeSrc" style="width: 600px" />
+			<button id="setSrcBtn">Load URL</button>
+		</div>
+
+		<iframe class="gameFrame" id="gameFrame" src="" frameborder="0"></iframe>
+
 		<div id="gameArea"></div>
+
 		<script type="module" src="./index.js"></script>
+		<script type="module" src="./iFrame.js"></script>
 	</body>
 </html>

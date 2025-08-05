@@ -95,6 +95,11 @@ window.addEventListener("message", ($e) => {
 			// iframe.contentWindow.postMessage({type: "BetValue", data: bet}, targetOrigin);
 			break;
 
+		case "BetValue":
+			bet = data;
+			betsButton.innerText = bet;
+			break;
+
 		default:
 			// Optional: log unhandled message types for debugging
 			console.log("Unhandled message type:", type, data);
