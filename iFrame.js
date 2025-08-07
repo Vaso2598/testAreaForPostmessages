@@ -4,7 +4,6 @@ const button = document.getElementById("setSrcBtn");
 
 const STORAGE_KEY = "iframeSrc";
 
-// Load from localStorage on page load
 window.addEventListener("DOMContentLoaded", () => {
 	const savedSrc = localStorage.getItem(STORAGE_KEY);
 	if (savedSrc) {
@@ -13,7 +12,6 @@ window.addEventListener("DOMContentLoaded", () => {
 	}
 });
 
-// Update iframe src and save on button click
 button.addEventListener("click", () => {
 	const newSrc = input.value.trim();
 	if (newSrc) {

@@ -10,7 +10,7 @@ let autoSpinValues = [];
 let autoSpinValuesIndex = 0;
 let betValues = [];
 let betValuesIndex = 0;
-let autoSpinCount = 0;
+let autoSpinValue = 0;
 let bet = 0;
 let speed = 1;
 let speedValues = [1, 2, 3];
@@ -66,9 +66,13 @@ const speedBtn = document.getElementById("speedBtn");
 window.addEventListener("message", ($e) => {
 	if ($e.origin !== targetOrigin) return;
 
-	const {type, data} = $e.data;
+	const { type, data } = $e.data;
 
 	switch (type) {
+		case "IsBonusRound":
+			console.log("Is Bonus Round", data);
+			break;
+
 		case "UpdateBalance":
 			console.log("New Balance", data);
 			break;
@@ -79,13 +83,25 @@ window.addEventListener("message", ($e) => {
 
 		case "Spin":
 			console.log("FreeSpins:", data);
+			if (data) {
+				betsPlusBtn.style.pointerEvents = "none";
+				betsMinusBtn.style.pointerEvents = "none";
+				betsPlusBtn.setAttribute("disabled", "true");
+				betsMinusBtn.setAttribute("disabled", "true");
+			}
 			break;
 
 		case "AutoSpinValues":
 			autoSpinValues = data;
 			autoSpinValues.unshift(0);
-			autoSpinCount = autoSpinValues[autoSpinValuesIndex];
-			autoPlayButton.innerText = autoSpinCount;
+			autoSpinValue = autoSpinValues[autoSpinValuesIndex];
+			autoPlayButton.innerText = autoSpinValue;
+			break;
+
+		case "AutoSpinValue":
+			console.log("AutoSpinValue:", data);
+			autoSpinValue = data;
+			autoPlayButton.innerText = autoSpinValue;
 			break;
 
 		case "BetValues":
@@ -98,6 +114,7 @@ window.addEventListener("message", ($e) => {
 		case "BetValue":
 			bet = data;
 			betsButton.innerText = bet;
+			console.log(bet);
 			break;
 
 		case "Music":
@@ -109,7 +126,6 @@ window.addEventListener("message", ($e) => {
 			break;
 
 		case "Speed":
-			console.log(data);
 			speed = data;
 			speedBtn.innerText = `Speed ${speed}`;
 			break;
@@ -130,30 +146,38 @@ startButton.addEventListener("click", () => {
 /* = Spin = */
 
 spinButton.addEventListener("click", () => {
-	iframe.contentWindow.postMessage({type: "Spin", data: bet}, targetOrigin);
-	if (autoSpinCount > 0) {
-		iframe.contentWindow.postMessage({type: "AutoSpinCount", data: autoSpinCount}, targetOrigin);
-		console.log("sent spin count", autoSpinCount);
+	if (autoSpinValue > 0) {
+		iframe.contentWindow.postMessage({ type: "AutoSpinValue", data: autoSpinValue }, targetOrigin);
+		console.log("sent spin count", autoSpinValue);
+	} else {
+		iframe.contentWindow.postMessage({ type: "Spin", data: bet }, targetOrigin);
 	}
 });
 
 /* = AutoPlay = */
 
+autoPlayButton.addEventListener("click", () => {
+	autoSpinValuesIndex = 0;
+	autoSpinValue = autoSpinValues[autoSpinValuesIndex];
+	autoPlayButton.innerText = autoSpinValue;
+	iframe.contentWindow.postMessage({ type: "AutoSpinValue", data: autoSpinValue }, targetOrigin);
+});
+
 autoPlayPlusBtn.addEventListener("click", () => {
 	if (autoSpinValuesIndex < autoSpinValues.length - 1) {
 		autoSpinValuesIndex++;
-		autoSpinCount = autoSpinValues[autoSpinValuesIndex];
-		console.log("Selected autoSpinCount value:", autoSpinCount);
-		autoPlayButton.innerText = autoSpinCount;
+		autoSpinValue = autoSpinValues[autoSpinValuesIndex];
+		console.log("Selected autoSpinValue value:", autoSpinValue);
+		autoPlayButton.innerText = autoSpinValue;
 	}
 });
 
 autoPlayMinusBtn.addEventListener("click", () => {
 	if (autoSpinValuesIndex > 0) {
 		autoSpinValuesIndex--;
-		autoSpinCount = autoSpinValues[autoSpinValuesIndex];
-		console.log("Selected autoSpinCount value:", autoSpinCount);
-		autoPlayButton.innerText = autoSpinCount;
+		autoSpinValue = autoSpinValues[autoSpinValuesIndex];
+		console.log("Selected autoSpinValue value:", autoSpinValue);
+		autoPlayButton.innerText = autoSpinValue;
 	}
 });
 
@@ -165,7 +189,7 @@ betsPlusBtn.addEventListener("click", () => {
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
-		iframe.contentWindow.postMessage({type: "BetValue", data: bet}, targetOrigin);
+		iframe.contentWindow.postMessage({ type: "BetValue", data: bet }, targetOrigin);
 	}
 });
 
@@ -175,7 +199,7 @@ betsMinusBtn.addEventListener("click", () => {
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
-		iframe.contentWindow.postMessage({type: "BetValue", data: bet}, targetOrigin);
+		iframe.contentWindow.postMessage({ type: "BetValue", data: bet }, targetOrigin);
 	}
 });
 
@@ -183,12 +207,12 @@ betsMinusBtn.addEventListener("click", () => {
 
 musicButton.addEventListener("click", () => {
 	isMusicMuted = !isMusicMuted;
-	iframe.contentWindow.postMessage({type: "Music", data: isMusicMuted}, targetOrigin);
+	iframe.contentWindow.postMessage({ type: "Music", data: isMusicMuted }, targetOrigin);
 });
 
 sfxButton.addEventListener("click", () => {
 	isSFXMuted = !isSFXMuted;
-	iframe.contentWindow.postMessage({type: "SFX", data: isSFXMuted}, targetOrigin);
+	iframe.contentWindow.postMessage({ type: "SFX", data: isSFXMuted }, targetOrigin);
 });
 
 /* = Speed = */
@@ -198,5 +222,5 @@ speedBtn.addEventListener("click", () => {
 	speed = speedValues[speedValuesIndex];
 	console.log(speed);
 	speedBtn.innerText = `Speed ${speed}`;
-	iframe.contentWindow.postMessage({type: "Speed", data: speed}, targetOrigin);
+	iframe.contentWindow.postMessage({ type: "Speed", data: speed }, targetOrigin);
 });
