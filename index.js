@@ -6,11 +6,11 @@ const targetOrigin = "http://localhost:7295";
 // let isEnabled = true;
 let isMusicMuted = false;
 let isSFXMuted = false;
-let autoSpinValues = [];
-let autoSpinValuesIndex = 0;
+let autoPlayValues = [];
+let autoPlayValuesIndex = 0;
 let betValues = [];
 let betValuesIndex = 0;
-let autoSpinValue = 0;
+let autoPlayValue = 0;
 let bet = 0;
 let speed = 1;
 let speedValues = [1, 2, 3];
@@ -91,17 +91,17 @@ window.addEventListener("message", ($e) => {
 			}
 			break;
 
-		case "AutoSpinValues":
-			autoSpinValues = data;
-			autoSpinValues.unshift(0);
-			autoSpinValue = autoSpinValues[autoSpinValuesIndex];
-			autoPlayButton.innerText = autoSpinValue;
+		case "AutoPlayValues":
+			autoPlayValues = data;
+			autoPlayValues.unshift(0);
+			autoPlayValue = autoPlayValues[autoPlayValuesIndex];
+			autoPlayButton.innerText = autoPlayValue;
 			break;
 
-		case "AutoSpinValue":
-			console.log("AutoSpinValue:", data);
-			autoSpinValue = data;
-			autoPlayButton.innerText = autoSpinValue;
+		case "AutoPlayValue":
+			console.log("AutoPlayValue:", data);
+			autoPlayValue = data;
+			autoPlayButton.innerText = autoPlayValue;
 			break;
 
 		case "BetValues":
@@ -146,9 +146,9 @@ startButton.addEventListener("click", () => {
 /* = Spin = */
 
 spinButton.addEventListener("click", () => {
-	if (autoSpinValue > 0) {
-		iframe.contentWindow.postMessage({ type: "AutoSpinValue", data: autoSpinValue }, targetOrigin);
-		console.log("sent spin count", autoSpinValue);
+	if (autoPlayValue > 0) {
+		iframe.contentWindow.postMessage({ type: "AutoPlayValue", data: autoPlayValue }, targetOrigin);
+		console.log("sent spin count", autoPlayValue);
 	} else {
 		iframe.contentWindow.postMessage({ type: "Spin", data: bet }, targetOrigin);
 	}
@@ -157,27 +157,27 @@ spinButton.addEventListener("click", () => {
 /* = AutoPlay = */
 
 autoPlayButton.addEventListener("click", () => {
-	autoSpinValuesIndex = 0;
-	autoSpinValue = autoSpinValues[autoSpinValuesIndex];
-	autoPlayButton.innerText = autoSpinValue;
-	iframe.contentWindow.postMessage({ type: "AutoSpinValue", data: autoSpinValue }, targetOrigin);
+	autoPlayValuesIndex = 0;
+	autoPlayValue = autoPlayValues[autoPlayValuesIndex];
+	autoPlayButton.innerText = autoPlayValue;
+	iframe.contentWindow.postMessage({ type: "AutoPlayValue", data: autoPlayValue }, targetOrigin);
 });
 
 autoPlayPlusBtn.addEventListener("click", () => {
-	if (autoSpinValuesIndex < autoSpinValues.length - 1) {
-		autoSpinValuesIndex++;
-		autoSpinValue = autoSpinValues[autoSpinValuesIndex];
-		console.log("Selected autoSpinValue value:", autoSpinValue);
-		autoPlayButton.innerText = autoSpinValue;
+	if (autoPlayValuesIndex < autoPlayValues.length - 1) {
+		autoPlayValuesIndex++;
+		autoPlayValue = autoPlayValues[autoPlayValuesIndex];
+		console.log("Selected autoPlayValue value:", autoPlayValue);
+		autoPlayButton.innerText = autoPlayValue;
 	}
 });
 
 autoPlayMinusBtn.addEventListener("click", () => {
-	if (autoSpinValuesIndex > 0) {
-		autoSpinValuesIndex--;
-		autoSpinValue = autoSpinValues[autoSpinValuesIndex];
-		console.log("Selected autoSpinValue value:", autoSpinValue);
-		autoPlayButton.innerText = autoSpinValue;
+	if (autoPlayValuesIndex > 0) {
+		autoPlayValuesIndex--;
+		autoPlayValue = autoPlayValues[autoPlayValuesIndex];
+		console.log("Selected autoPlayValue value:", autoPlayValue);
+		autoPlayButton.innerText = autoPlayValue;
 	}
 });
 
@@ -189,7 +189,7 @@ betsPlusBtn.addEventListener("click", () => {
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
-		iframe.contentWindow.postMessage({ type: "BetValue", data: bet }, targetOrigin);
+		iframe.contentWindow.postMessage({ type: "BetValue", data: betValuesIndex }, targetOrigin);
 	}
 });
 
@@ -199,7 +199,7 @@ betsMinusBtn.addEventListener("click", () => {
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
-		iframe.contentWindow.postMessage({ type: "BetValue", data: bet }, targetOrigin);
+		iframe.contentWindow.postMessage({ type: "BetValue", data: betValuesIndex }, targetOrigin);
 	}
 });
 
