@@ -1,7 +1,7 @@
 const lambdaGame = document.getElementById("gameArea");
 const iframe = document.getElementById("gameFrame");
 
-const targetOrigin = "http://localhost:7295";
+const targetOrigin = new URL(localStorage.getItem("iframeSrc")).origin;
 
 // let isEnabled = true;
 let isMusicMuted = false;
