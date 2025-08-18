@@ -110,7 +110,7 @@ window.addEventListener("message", ($e) => {
 			betsButton.innerText = bet;
 			break;
 
-		case "Outgoing_BetValue":
+		case "Outgoing_BetValueIndex":
 			bet = data;
 			betsButton.innerText = bet;
 			break;
@@ -192,7 +192,7 @@ betsPlusBtn.addEventListener("click", () => {
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
-		iframe.contentWindow.postMessage({ type: "Incoming_BetValue", data: betValuesIndex }, targetOrigin);
+		iframe.contentWindow.postMessage({ type: "Incoming_BetValueIndex", data: betValuesIndex }, targetOrigin);
 	}
 });
 
@@ -202,7 +202,7 @@ betsMinusBtn.addEventListener("click", () => {
 		bet = betValues[betValuesIndex];
 		console.log("Selected bet value:", bet);
 		betsButton.innerText = bet;
-		iframe.contentWindow.postMessage({ type: "Incoming_BetValue", data: betValuesIndex }, targetOrigin);
+		iframe.contentWindow.postMessage({ type: "Incoming_BetValueIndex", data: betValuesIndex }, targetOrigin);
 	}
 });
 
@@ -215,6 +215,7 @@ musicButton.addEventListener("click", () => {
 	// Send the muted state (true = muted, false = not muted)
 	// iframe.contentWindow.postMessage({ type: "Incoming_Music", data: isMusicMuted }, targetOrigin);
 	syncAudioStates();
+	musicButton.innerText = isMusicMuted ? "Music: OFF" : "Music: ON";
 });
 
 sfxButton.addEventListener("click", () => {
@@ -224,6 +225,7 @@ sfxButton.addEventListener("click", () => {
 	// Send the muted state (true = muted, false = not muted)
 	// iframe.contentWindow.postMessage({ type: "Incoming_SFX", data: isSFXMuted }, targetOrigin);
 	syncAudioStates();
+	sfxButton.innerText = isSFXMuted ? "SFX: OFF" : "SFX: ON";
 });
 
 function syncAudioStates() {
