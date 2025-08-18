@@ -108,21 +108,25 @@ window.addEventListener("message", ($e) => {
 			betValues = data;
 			bet = betValues[betValuesIndex];
 			betsButton.innerText = bet;
-			// iframe.contentWindow.postMessage({type: "BetValue", data: bet}, targetOrigin);
 			break;
 
 		case "Outgoing_BetValue":
 			bet = data;
 			betsButton.innerText = bet;
-			console.log(bet);
 			break;
 
 		case "Outgoing_Music":
 			isMusicMuted = data;
+			console.log("Received from game - Music muted:", isMusicMuted);
+			// Update button text to show current state
+			musicButton.innerText = isMusicMuted ? "Music: OFF" : "Music: ON";
 			break;
 
 		case "Outgoing_SFX":
 			isSFXMuted = data;
+			console.log("Received from game - SFX muted:", isSFXMuted);
+			// Update button text to show current state
+			sfxButton.innerText = isSFXMuted ? "SFX: OFF" : "SFX: ON";
 			break;
 
 		case "Outgoing_Speed":
@@ -131,7 +135,6 @@ window.addEventListener("message", ($e) => {
 			break;
 
 		default:
-			// Optional: log unhandled message types for debugging
 			console.log("Unhandled message type:", type, data);
 			break;
 	}
@@ -207,13 +210,26 @@ betsMinusBtn.addEventListener("click", () => {
 
 musicButton.addEventListener("click", () => {
 	isMusicMuted = !isMusicMuted;
-	iframe.contentWindow.postMessage({ type: "Incoming_Music", data: isMusicMuted }, targetOrigin);
+	// console.log("Sending music muted state:", isMusicMuted);
+	console.log("Music button clicked. New state - Music muted:", isMusicMuted, "SFX muted:", isSFXMuted);
+	// Send the muted state (true = muted, false = not muted)
+	// iframe.contentWindow.postMessage({ type: "Incoming_Music", data: isMusicMuted }, targetOrigin);
+	syncAudioStates();
 });
 
 sfxButton.addEventListener("click", () => {
 	isSFXMuted = !isSFXMuted;
-	iframe.contentWindow.postMessage({ type: "Incoming_SFX", data: isSFXMuted }, targetOrigin);
+	// console.log("Sending SFX muted state:", isSFXMuted);
+	console.log("SFX button clicked. New state - Music muted:", isMusicMuted, "SFX muted:", isSFXMuted);
+	// Send the muted state (true = muted, false = not muted)
+	// iframe.contentWindow.postMessage({ type: "Incoming_SFX", data: isSFXMuted }, targetOrigin);
+	syncAudioStates();
 });
+
+function syncAudioStates() {
+	iframe.contentWindow.postMessage({ type: "Incoming_Music", data: isMusicMuted }, targetOrigin);
+	iframe.contentWindow.postMessage({ type: "Incoming_SFX", data: isSFXMuted }, targetOrigin);
+}
 
 /* = Speed = */
 
