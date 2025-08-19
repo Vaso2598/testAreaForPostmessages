@@ -4,8 +4,8 @@ const iframe = document.getElementById("gameFrame");
 const targetOrigin = new URL(localStorage.getItem("iframeSrc")).origin;
 
 // let isEnabled = true;
-let isMusicMuted = false;
-let isSFXMuted = false;
+let isMusicMuted = true;
+let isSFXMuted = true;
 let autoPlayValues = [];
 let autoPlayValuesIndex = 0;
 let betValues = [];
@@ -69,6 +69,10 @@ window.addEventListener("message", ($e) => {
 	const { type, data } = $e.data;
 
 	switch (type) {
+		case "Outgoing_MachineInitialized":
+			console.log("Game Loaded", data);
+			break;
+
 		case "Outgoing_IsBonusRound":
 			console.log("Is Bonus Round", data);
 			break;
@@ -116,15 +120,15 @@ window.addEventListener("message", ($e) => {
 			break;
 
 		case "Outgoing_Music":
-			isMusicMuted = data;
-			console.log("Received from game - Music muted:", isMusicMuted);
+			isMusicMuted = !data; // data is true when music is enabled, so muted is the opposite
+			console.log("Received from game - Music enabled:", data); //, "Music muted:", isMusicMuted);
 			// Update button text to show current state
 			musicButton.innerText = isMusicMuted ? "Music: OFF" : "Music: ON";
 			break;
 
 		case "Outgoing_SFX":
-			isSFXMuted = data;
-			console.log("Received from game - SFX muted:", isSFXMuted);
+			isSFXMuted = !data; // data is true when SFX is enabled, so muted is the opposite
+			console.log("Received from game - SFX enabled:", data); //, "SFX muted:", isSFXMuted);
 			// Update button text to show current state
 			sfxButton.innerText = isSFXMuted ? "SFX: OFF" : "SFX: ON";
 			break;
@@ -229,8 +233,8 @@ sfxButton.addEventListener("click", () => {
 });
 
 function syncAudioStates() {
-	iframe.contentWindow.postMessage({ type: "Incoming_Music", data: isMusicMuted }, targetOrigin);
-	iframe.contentWindow.postMessage({ type: "Incoming_SFX", data: isSFXMuted }, targetOrigin);
+	iframe.contentWindow.postMessage({ type: "Incoming_Music", data: !isMusicMuted }, targetOrigin);
+	iframe.contentWindow.postMessage({ type: "Incoming_SFX", data: !isSFXMuted }, targetOrigin);
 }
 
 /* = Speed = */
