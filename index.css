@@ -38,6 +38,13 @@ label {
 
 #iframeSrc {
 	width: 1000px;
+	height: 24px;
+	border: none;
+	border-radius: 5px;
+}
+
+#iframeSrc:focus {
+	outline: none;
 }
 
 .gameFrame {

@@ -70,7 +70,7 @@ window.addEventListener("message", ($e) => {
 
 	switch (type) {
 		case "Outgoing_MachineInitialized":
-			console.log("Game Loaded", data);
+			console.log("Machine Initialized", data);
 			break;
 
 		case "Outgoing_IsBonusRound":
