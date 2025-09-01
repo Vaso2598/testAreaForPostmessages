@@ -1,7 +1,9 @@
 const lambdaGame = document.getElementById("gameArea");
 const iframe = document.getElementById("gameFrame");
 
-const targetOrigin = new URL(localStorage.getItem("iframeSrc")).origin;
+// const targetOrigin = new URL(localStorage.getItem("iframeSrc")).origin;
+const targetOrigin = "*";
+console.log(targetOrigin);
 
 // let isEnabled = true;
 let isMusicMuted = true;
@@ -18,7 +20,7 @@ let speedValuesIndex = 0;
 
 lambdaGame.innerHTML = `
 <div class="btnContainer">
-    <button id="startBtn" class="btn">Start Game</button>
+    <button id="balanceBtn" class="btn danger" type="button">Update Balance</button>
     <button id="spinBtn" class="btn" type="button">Spin</button>
 	<div id="autoPlayContainer">
     	<button id="autoPlayBtn" class="btn">Auto Play</button>
@@ -43,7 +45,7 @@ lambdaGame.innerHTML = `
 
 /* = Buttons = */
 
-const startButton = document.getElementById("startBtn");
+const getBalanceButton = document.getElementById("balanceBtn");
 const spinButton = document.getElementById("spinBtn");
 const autoPlayButton = document.getElementById("autoPlayBtn");
 const betsButton = document.getElementById("betsBtn");
@@ -64,13 +66,18 @@ const speedBtn = document.getElementById("speedBtn");
 /* = PostMessages = */
 
 window.addEventListener("message", ($e) => {
-	if ($e.origin !== targetOrigin) return;
+	// console.log($e);
+	// if ($e.origin !== targetOrigin) return;
 
 	const { type, data } = $e.data;
 
 	switch (type) {
 		case "Outgoing_MachineInitialized":
 			console.log("Machine Initialized", data);
+			break;
+
+		case "Outgoing_IntroComplete":
+			console.log("Intro Play Button Clicked", data);
 			break;
 
 		case "Outgoing_IsBonusRound":
@@ -115,7 +122,8 @@ window.addEventListener("message", ($e) => {
 			break;
 
 		case "Outgoing_BetValueIndex":
-			bet = data;
+			betValuesIndex = data;
+			bet = betValues[betValuesIndex];
 			betsButton.innerText = bet;
 			break;
 
@@ -146,8 +154,10 @@ window.addEventListener("message", ($e) => {
 
 /* = Button Event Listeners = */
 
-startButton.addEventListener("click", () => {
-	console.log("Blank for now");
+getBalanceButton.addEventListener("click", () => {
+	if (confirm("This will try to update balance and may break something")) {
+		iframe.contentWindow.postMessage({ type: "Incoming_UpdateBalance", data: 69420 }, targetOrigin);
+	}
 });
 
 /* = Spin = */

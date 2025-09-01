@@ -82,6 +82,12 @@ label {
 	text-align: center;
 }
 
+.danger {
+	background-color: #dc2626;
+	color: #ffffff;
+	border: 1px solid #fca5a5;
+}
+
 #setSrcBtn {
 	width: 128px;
 	height: 24px;
@@ -99,4 +105,8 @@ label {
 
 .btn:hover {
 	background-color: #40798c;
+}
+
+.danger:hover {
+	background-color: #b91c1c;
 }
