@@ -117,13 +117,14 @@ window.addEventListener("message", ($e) => {
 
 		case "Outgoing_BetValues":
 			betValues = data;
-			bet = betValues[betValuesIndex];
-			betsButton.innerText = bet;
+			// bet = betValues[betValuesIndex];
+			// betsButton.innerText = bet;
 			break;
 
 		case "Outgoing_BetValueIndex":
 			betValuesIndex = data;
 			bet = betValues[betValuesIndex];
+			// console.log(bet);
 			betsButton.innerText = bet;
 			break;
 
@@ -146,6 +147,10 @@ window.addEventListener("message", ($e) => {
 			speedBtn.innerText = `Speed ${speed}`;
 			break;
 
+		case "Outgoing_InfoPanelOpened":
+			console.log("Menu is open:", data);
+			break;
+
 		default:
 			console.log("Unhandled message type:", type, data);
 			break;
@@ -156,7 +161,7 @@ window.addEventListener("message", ($e) => {
 
 getBalanceButton.addEventListener("click", () => {
 	if (confirm("This will try to update balance and may break something")) {
-		iframe.contentWindow.postMessage({ type: "Incoming_UpdateBalance", data: 69420 }, targetOrigin);
+		iframe.contentWindow.postMessage({ type: "Incoming_UpdateBalance", data: {} }, targetOrigin);
 	}
 });
 
