@@ -17,10 +17,10 @@ let bet = 0;
 let speed = 1;
 let speedValues = [1, 2, 3];
 let speedValuesIndex = 0;
+let isVIP = false;
 
 lambdaGame.innerHTML = `
 <div class="btnContainer">
-    <button id="balanceBtn" class="btn danger" type="button">Update Balance</button>
     <button id="spinBtn" class="btn" type="button">Spin</button>
 	<div id="autoPlayContainer">
     	<button id="autoPlayBtn" class="btn">Auto Play</button>
@@ -39,13 +39,13 @@ lambdaGame.innerHTML = `
     <button id="musicBtn" class="btn">Music</button>
     <button id="sfxBtn" class="btn">SFX</button>
     <button id="speedBtn" class="btn">Speed</button>
+    <button id="VIPBtn" class="btn">VIP</button>
 </div>
 <div id="autoPlay" class="btnContainer"></div>
 `;
 
 /* = Buttons = */
 
-const getBalanceButton = document.getElementById("balanceBtn");
 const spinButton = document.getElementById("spinBtn");
 const autoPlayButton = document.getElementById("autoPlayBtn");
 const betsButton = document.getElementById("betsBtn");
@@ -62,6 +62,8 @@ const betsPlusBtn = betsInnerBtns[0];
 const betsMinusBtn = betsInnerBtns[1];
 
 const speedBtn = document.getElementById("speedBtn");
+
+const vipBtn = document.getElementById("VIPBtn");
 
 /* = PostMessages = */
 
@@ -158,13 +160,6 @@ window.addEventListener("message", ($e) => {
 });
 
 /* = Button Event Listeners = */
-
-getBalanceButton.addEventListener("click", () => {
-	if (confirm("This will try to update balance and may break something")) {
-		iframe.contentWindow.postMessage({ type: "Incoming_UpdateBalance", data: {} }, targetOrigin);
-	}
-});
-
 /* = Spin = */
 
 spinButton.addEventListener("click", () => {
@@ -260,4 +255,12 @@ speedBtn.addEventListener("click", () => {
 	console.log(speed);
 	speedBtn.innerText = `Speed ${speed}`;
 	iframe.contentWindow.postMessage({ type: "Incoming_Speed", data: speed }, targetOrigin);
+});
+
+/* = VIP = */
+
+vipBtn.addEventListener("click", () => {
+	isVIP = !isVIP;
+	vipBtn.innerText = `VIP ${isVIP}`;
+	iframe.contentWindow.postMessage({ type: "Incoming_VIPEnabled", data: isVIP }, targetOrigin);
 });
