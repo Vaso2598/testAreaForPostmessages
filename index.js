@@ -17,6 +17,7 @@ let bet = 0;
 let speed = 1;
 let speedValues = [1, 2, 3];
 let speedValuesIndex = 0;
+let isQuickSpin = false;
 let isVIP = false;
 
 lambdaGame.innerHTML = `
@@ -39,6 +40,7 @@ lambdaGame.innerHTML = `
     <button id="musicBtn" class="btn">Music</button>
     <button id="sfxBtn" class="btn">SFX</button>
     <button id="speedBtn" class="btn">Speed</button>
+    <button id="speedBtn2" class="btn">Turbo</button>
     <button id="VIPBtn" class="btn">VIP</button>
 </div>
 <div id="autoPlay" class="btnContainer"></div>
@@ -62,6 +64,7 @@ const betsPlusBtn = betsInnerBtns[0];
 const betsMinusBtn = betsInnerBtns[1];
 
 const speedBtn = document.getElementById("speedBtn");
+const speedBtn2 = document.getElementById("speedBtn2");
 
 const vipBtn = document.getElementById("VIPBtn");
 
@@ -147,6 +150,11 @@ window.addEventListener("message", ($e) => {
 		case "Outgoing_Speed":
 			speed = data;
 			speedBtn.innerText = `Speed ${speed}`;
+			break;
+
+		case "Outgoing_Speed":
+			isQuickSpin = data;
+			speedBtn2.innerText = `Turbo ${isQuickSpin}`;
 			break;
 
 		case "Outgoing_InfoPanelOpened":
@@ -255,6 +263,13 @@ speedBtn.addEventListener("click", () => {
 	console.log(speed);
 	speedBtn.innerText = `Speed ${speed}`;
 	iframe.contentWindow.postMessage({ type: "Incoming_Speed", data: speed }, targetOrigin);
+});
+
+speedBtn2.addEventListener("click", () => {
+	isQuickSpin = !isQuickSpin;
+	console.log(isQuickSpin);
+	speedBtn2.innerText = `Turbo ${isQuickSpin ? "ON" : "OFF"}`;
+	iframe.contentWindow.postMessage({ type: "Incoming_Speed", data: isQuickSpin }, targetOrigin);
 });
 
 /* = VIP = */
