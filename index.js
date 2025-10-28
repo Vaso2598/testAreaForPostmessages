@@ -21,29 +21,37 @@ let isQuickSpin = false;
 let isVIP = false;
 
 lambdaGame.innerHTML = `
-<div class="btnContainer">
-    <button id="spinBtn" class="btn" type="button">Spin</button>
-	<div id="autoPlayContainer">
-    	<button id="autoPlayBtn" class="btn">Auto Play</button>
-		<div class="innerBtnContainer">
-			<button class="btn smallBtn">+</button>
-			<button class="btn smallBtn">-</button>
+	<div class="btnContainer">
+		<button id="spinBtn" class="btn" type="button">Spin</button>
+		<div id="autoPlayContainer">
+			<button id="autoPlayBtn" class="btn">Auto Play</button>
+			<div class="innerBtnContainer">
+				<button class="btn smallBtn">+</button>
+				<button class="btn smallBtn">-</button>
+			</div>
+		</div>
+		<div id="betsContainer">
+			<button id="betsBtn" class="btn">Bets</button>
+			<div class="innerBtnContainer">
+				<button class="btn smallBtn">+</button>
+				<button class="btn smallBtn">-</button>
+			</div>
+		</div>
+		<button id="musicBtn" class="btn">Music</button>
+		<button id="sfxBtn" class="btn">SFX</button>
+		<button id="speedBtn" class="btn">Speed</button>
+		<button id="speedBtn2" class="btn">Turbo</button>
+		<button id="VIPBtn" class="btn">VIP</button>
+		<div>
+			<span for="wonValue">Won:</span>
+			<p id="wonValue">0.00</p>
+		</div>
+		<div>
+			<span for="balance">Balance:</span>
+			<p id="balance">0.00</p>
 		</div>
 	</div>
-	<div id="betsContainer">
-    	<button id="betsBtn" class="btn">Bets</button>
-		<div class="innerBtnContainer">
-			<button class="btn smallBtn">+</button>
-			<button class="btn smallBtn">-</button>
-		</div>
-	</div>
-    <button id="musicBtn" class="btn">Music</button>
-    <button id="sfxBtn" class="btn">SFX</button>
-    <button id="speedBtn" class="btn">Speed</button>
-    <button id="speedBtn2" class="btn">Turbo</button>
-    <button id="VIPBtn" class="btn">VIP</button>
-</div>
-<div id="autoPlay" class="btnContainer"></div>
+	<div id="autoPlay" class="btnContainer"></div>
 `;
 
 /* = Buttons = */
@@ -91,10 +99,14 @@ window.addEventListener("message", ($e) => {
 
 		case "Outgoing_UpdateBalance":
 			console.log("New Balance", data);
+			const balanceDisplay = document.getElementById("balance");
+			balanceDisplay.innerText = data;
 			break;
 
 		case "Outgoing_UpdateWin":
 			console.log("Total Win", data);
+			const wonDisplay = document.getElementById("wonValue");
+			wonDisplay.innerText = data;
 			break;
 
 		case "Outgoing_Spin":
